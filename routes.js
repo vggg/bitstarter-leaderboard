@@ -41,7 +41,7 @@ var build_errfn = function(errmsg, response) {
 var indexfn = function(request, response) {
     response.render("homepage", {
 	name: Constants.APP_NAME,
-	title: "My First " + Constants.APP_NAME,
+	title: "" + Constants.APP_NAME,
 	product_name: Constants.PRODUCT_NAME,
 	twitter_username: Constants.TWITTER_USERNAME,
 	twitter_tweet: Constants.TWITTER_TWEET,
