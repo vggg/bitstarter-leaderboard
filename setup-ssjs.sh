@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install node packages
-npm install
+sudo npm install
 
 echo -e "\n\nNOW ENTER YOUR HEROKU PASSWORD"
 # Set up heroku.
