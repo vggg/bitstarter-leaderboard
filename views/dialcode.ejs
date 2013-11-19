@@ -68,17 +68,15 @@
           <div class="span6 offset3 id=tryme">
             <!-- AddThis Button BEGIN -->
             <div class="well">
-            <form  method=post" action='/dialcode'>
-              <h2 class="form-signin-heading">Verify your Phone Number</h2>
-              <p>We need to verify your phone number</p>
-              <p>Please enter your valid U.S. phone number (XXXXXXXXXX), we will give you a code</p>
-              <input type="tel" name="phoneNo" ng-model="phoneNumber" class="input-block-level" placeholder="Phone Number" id="phoneNo">
+            <form class="form-verifycode">
+              <h2 class="form-signin-heading">Verify Code</h2>
+              <p>Please enter the code you received on the phone</p>
+              <input type="text" ng-model="code" class="input-block-level" placeholder="5 digit Code" id="code">
               <div class="pull-right">
                  <!--<input type="submit" class="btn btn-primary" value="Verify Phone"> -->
                 <!-- <a class="verifytn btn btn-primary" href="/callcode" data-id=$(#phoneNo) role="button" data-toggle="modal">Verify Phone</a> 
                 -->
-                <button type="submit">Submit</button>
-                <!-- <button id="myFormSubmit" type="submit">Submit</button> -->
+                <button id="myFormSubmit" type="submit">Submit</button>
               </div>
             </form>
             </div>
@@ -145,32 +143,6 @@
       </div>
     </div>
 
-
-<!--
-   <div id="validatecode" class="modal hide fade" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <h2 class="form-signin-heading">Verify Code</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i></button>
-        <h3 id ="modalLabel">Verify Phone</h3>
-    </div>
-    <div class="modal-body">
-      <form method="post" action="/validatecode">
-        <div class="controls controls-row">
-        <p>Please enter the 5 digit code</p>
-        <input type="text" class="input-block-level" placeholder="Code" name="code" id="code">
-        <button id="myModalSubmit" type="submit">Submit</button>
-        </div>
-      </form>
-   </div>
-   <div class="modal-footer">
-     <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">cancel</button>
-   </div>
-  </div>
-
--->
-
-
-
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -183,49 +155,25 @@
 </script>
 
 <script >
-/*$(function(){
+$(function(){
     $('#myFormSubmit').click(function(e){
       e.preventDefault();
-      //alert($('#code').val() + $('#phoneNo').val());
+      alert($('#code').val() + $('#phoneNo').val());
       
-      $.post('/dialcode', 
+      $.post('/callcode', 
          {
-            phoneNo:$('#phoneNo').val()
-         },
-         function(data, status, xhr){
-           //do something here with response;
-           //assume no error
-           //console.log(data);
-           //console.log(status);
-           //$('#validatecode').modal('show');
-            
-         }
-      );
-      
-    });
-});
-*/
-/*
-$(function(){
-    $('#myModalSubmit').click(function(e){
-      e.preventDefault();
-      //alert($('#code').val() + $('#phoneNo').val());
-      
-      $.post('/validatecode', 
-         {
-            phoneNo:$('#phoneNo').val()
             code:$('#code').val()
+            phoneNo:$('#phoneNo').val()
          },
          function(data, status, xhr){
-           //do something here with response;
+           // do something here with response;
            //assume no error
-            
-         }
-      );
+           
+         });
       
     });
 });
-*/
+
 </script>
   </body>
 </html>

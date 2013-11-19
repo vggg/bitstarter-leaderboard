@@ -3,7 +3,9 @@ var express = require('express')
   , path    = require('path')
   , async   = require('async')
   , db      = require('./models')
-  , ROUTES  = require('./routes');
+  , TWILIO  = require('./twilio')
+  , ROUTES  = require('./routes')
+  , POST_ROUTES  = require('./post_routes');
 
 /*
   Initialize the Express app, the E in the MEAN stack (from mean.io).
@@ -91,12 +93,24 @@ for(var ii in ROUTES) {
     app.get(ROUTES[ii].path, ROUTES[ii].fn);
     //console.log(ROUTES[ii].path + '  ' +  ROUTES[ii].fn );
 }
-app.post('/validatecode', function(request, response){
+for(var ii in POST_ROUTES) {
+    app.post(POST_ROUTES[ii].path, POST_ROUTES[ii].fn);
+    console.log(POST_ROUTES[ii].path + '  ' +  POST_ROUTES[ii].fn );
+}
+/* app.post('/validatecode', function(request, response){
     //console.log(request.body);
     //console.log(request.body);
     response.send({ status: 'SUCCESS' });
     }
 );
+app.post('/callcode', function(request, response){
+    console.log(request.body);
+    //TWILIO.callcode('5109968313');
+    //console.log(request.body);
+    //response.send({ status: 'SUCCESS' });
+    }
+);
+*/
 
 global.db.sequelize.sync().complete(function(err) {
     if (err) {

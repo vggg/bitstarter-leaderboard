@@ -1,7 +1,5 @@
 var uu      = require('underscore')
   , db      = require('./models')
-  , TWILIO  = require('./twilio')
-  , fs      = require('fs')
   , Constants = require('./constants');
 
 var build_errfn = function(errmsg, response) {
@@ -40,44 +38,20 @@ var build_errfn = function(errmsg, response) {
    on the networking aspects of parsing the request and response, initiating
    the query to the database, and packaging it all up in a request.
 */
-var indexfn = function(request, response) {
-    response.render("homepage", {
-	name: Constants.APP_NAME,
-	title: "" + Constants.APP_NAME,
-	product_name: Constants.PRODUCT_NAME,
-	twitter_username: Constants.TWITTER_USERNAME,
-	twitter_tweet: Constants.TWITTER_TWEET,
-	product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
-	coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
-	try_me_data_code: Constants.TRY_ME_DATA_CODE
-    });
-};
 
-var orderfn = function(request, response) {
-    var successcb = function(orders_json) {
-	response.render("orderpage", {orders: orders_json});
-    };
-    var errcb = build_errfn('error retrieving orders', response);
-    global.db.Order.allToJSON(successcb, errcb);
-};
 
-var trymefn = function(request, response) {
-    response.render("tryme", {
-        name: Constants.APP_NAME,
-        title: "" + Constants.APP_NAME,
-        product_name: Constants.PRODUCT_NAME,
-        twitter_username: Constants.TWITTER_USERNAME,
-        twitter_tweet: Constants.TWITTER_TWEET,
-        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
-        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
-        try_me_data_code: Constants.TRY_ME_DATA_CODE
-    });
-};
 
 var validatecodefn = function(request, response){
     console.log(request.body.phoneNo);
     console.log(request.body.code);
-    console.log();
+    response.send({ status: 'SUCCESS' });
+};
+
+var callcodefn = function(request, response){
+    console.log(request.body);
+    //TWILIO.callcode('5109968313');
+    //console.log(request.body);
+    //response.send({ status: 'SUCCESS' });
 };
 
 var dialcodeurlfn = function(request, response){
@@ -87,50 +61,22 @@ var dialcodeurlfn = function(request, response){
 };
 
 var dialcodefn = function(request, response){
-    console.log(request.query.phoneNo);
-    //console.log(request.body.code);
-    var t_url = "http://" + request.headers.host + "/dialcodeurl";
-    console.log("iTwilio Url" + t_url);
-    TWILIO.callcode(request.query.phoneNo, t_url);
-    response.render("dialcode", {
-        name: Constants.APP_NAME,
-        title: "" + Constants.APP_NAME,
-        product_name: Constants.PRODUCT_NAME,
-        twitter_username: Constants.TWITTER_USERNAME,
-        twitter_tweet: Constants.TWITTER_TWEET,
-        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
-        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
-        try_me_data_code: Constants.TRY_ME_DATA_CODE,
-        phoneNo: request.body.phoneNo
-    })
+    console.log(request.body);
+    //TWILIO.callcode('5109968313');
+    //console.log(request.body);
+    response.send({ status: 'SUCCESS' });
+    //response.render("dialcode", {
+    //    name: Constants.APP_NAME,
+    //    title: "" + Constants.APP_NAME,
+    //    product_name: Constants.PRODUCT_NAME,
+    //    twitter_username: Constants.TWITTER_USERNAME,
+    //    twitter_tweet: Constants.TWITTER_TWEET,
+    //    product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+    //    coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+    //    try_me_data_code: Constants.TRY_ME_DATA_CODE,
+    //    phoneNo: request.body.phoneNo
+    //});
 };
-
-
-var api_orderfn = function(request, response) {
-    var successcb = function(totals) {
-	var data = uu.extend(totals,
-			     {target: Constants.FUNDING_TARGET,
-			      unit_symbol: Constants.FUNDING_UNIT_SYMBOL,
-			      days_left: Constants.days_left()});
-	data.total_funded *= Constants.FUNDING_SI_SCALE;
-	response.json(data);
-    };
-    var errcb = build_errfn('error retrieving API orders', response);
-    global.db.Order.totals(successcb, errcb);
-};
-
-var refresh_orderfn = function(request, response) {
-    var cb = function(err) {
-	if(err) {
-	    console.log("Error in refresh_orderfn");
-	    response.send("Error refreshing orders.");
-	} else {
-	    response.redirect("/orders");
-	}
-    };
-    global.db.Order.refreshFromCoinbase(cb);
-};
-
 
 /*
    Helper functions which create a ROUTES array for export and use by web.js
@@ -156,14 +102,11 @@ var define_routes = function(dict) {
     return uu.map(uu.pairs(dict), toroute);
 };
 
-var ROUTES = define_routes({
-    '/': indexfn,
-    '/orders': orderfn,
-    '/tryme': trymefn,
+var POST_ROUTES = define_routes({
+    '/validatecode': validatecodefn,
     '/dialcode': dialcodefn,
     '/dialcodeurl': dialcodeurlfn,
-    '/api/orders': api_orderfn,
-    '/refresh_orders': refresh_orderfn
+    '/callcode': callcodefn
 });
 
-module.exports = ROUTES;
+module.exports = POST_ROUTES;
