@@ -1,5 +1,7 @@
 var uu      = require('underscore')
   , db      = require('./models')
+  , TWILIO  = require('./twilio')
+  , fs      = require('fs')
   , Constants = require('./constants');
 
 var build_errfn = function(errmsg, response) {
@@ -60,10 +62,12 @@ var dialcodeurlfn = function(request, response){
   response.sendfile('dialcode.xml');
 };
 
+
 var dialcodefn = function(request, response){
     console.log("----- dialcodefn --------");
     console.log(request.body);
-    //TWILIO.callcode('5109968313');
+     var t_url = "http://" + request.headers.host + "/dialcodeurl";
+    TWILIO.callcode(request.body.phoneNo, t_url);
     //console.log(request.body);
     //response.send({ status: 'SUCCESS' });
     response.render("dialcode", {
@@ -98,7 +102,39 @@ var greetingfn = function(request, response){
     });
 };
 
+var greetemfn = function(request, response){
+    console.log("-------greetemfn:------");
+    console.log(request.body);
+    console.log(request.body.phoneNo);
+    console.log(request.body.toPhoneNo);
+    console.log(request.body.greettext);
+     var t_url = "http://" + request.headers.host + "/greetcodeurl";
+    console.log("Twilio Url" + t_url);
+    TWILIO.callcode(request.body.toPhoneNo, t_url);
+    response.render("greetem", {
+        name: Constants.APP_NAME,
+        title: "" + Constants.APP_NAME,
+        product_name: Constants.PRODUCT_NAME,
+        twitter_username: Constants.TWITTER_USERNAME,
+        twitter_tweet: Constants.TWITTER_TWEET,
+        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+        try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        phoneNo: request.body.phoneNo
+    });
+};
 
+var greetcodeurlfn = function(request, response){
+  //var buffer = new Buffer(fs.readFileSync('dialcode.xml'),'utf-8');
+  //response.send(buffer.toString());
+  response.sendfile('greetcode.xml');
+ // var message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n<Response>\n    <Say voice=\"Alice\">This message is from Vikram</Say> \n    <Say voice=\"Alice\">I love you... Have a great day</Say> \n    <Say voice=\"Alice\">Goodbye!..</Say> \n</Response>";
+  /*response.writeHead(200, {
+    "Content-Type": "text/xml"
+  });
+  response.end(message);
+*/
+};
 
 /*
    Helper functions which create a ROUTES array for export and use by web.js
@@ -129,7 +165,9 @@ var POST_ROUTES = define_routes({
     '/dialcode': dialcodefn,
     '/dialcodeurl': dialcodeurlfn,
     '/greeting': greetingfn,
-    '/callcode': callcodefn
+    '/greetem': greetemfn,
+    '/callcode': callcodefn,
+    '/greetcodeurl': greetcodeurlfn
 });
 
 module.exports = POST_ROUTES;

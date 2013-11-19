@@ -29,7 +29,8 @@ client.sendMessage({
 //Place a phone call, and respond with TwiML instructions from the given URL
 /*
 var phoneNo='+15109968313';
-var twilioUrl='http://ec2-54-201-70-148.us-west-2.compute.amazonaws.com:8080/dialcodeurl';
+var toPhoneNo='15109968313';
+var twilioUrl='http://ec2-54-201-70-148.us-west-2.compute.amazonaws.com:8080/greetcodeurl';
     console.log(phoneNo);
     console.log(twilioUrl);
 client.makeCall({
@@ -45,8 +46,8 @@ client.makeCall({
 
 });
 
-//*/
 
+*/
 module.exports = {
   callcode: function (phoneNo, twilioUrl) {
    //---
@@ -67,8 +68,23 @@ module.exports = {
 
   //-- 
   },
-  greet: function () {
+  greetcode: function (phoneNo, toPhoneNo, greet_url) {
     // whatever
+    console.log(phoneNo);
+    console.log(toPhoneNo);
+    console.log(greet_url);
+    client.makeCall({
+
+        to: toPhoneNo, // Any number Twilio can call
+        from: '+15102300080', // A number you bought from Twilio and can use for outbound communication
+        url: greet_url
+
+    }, function(err, responseData) {
+    //executed when the call has been initiated.
+        console.log(responseData.from); // outputs "+14506667788"
+   });
+
+
   }
 };
 
