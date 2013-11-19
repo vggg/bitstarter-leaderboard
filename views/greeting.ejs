@@ -68,18 +68,12 @@
           <div class="span6 offset3 id=tryme">
             <!-- AddThis Button BEGIN -->
             <div class="well">
-            <form id="verifyCode"  method="post" action="/greeting">
-              <h2 class="form-signin-heading">Verify Code</h2>
+            <form id="verifyGreeting"  method="post" action="/greeting">
+              <h2 class="form-signin-heading">Verify Greeting</h2>
               <p>Please enter the code you received on the phone</p>
-              <span for="code" id="spanPhNo" ng-model="phNo" name="namephoneNo" class="label label-info"><%= phoneNo %></span>
+              <span id="labelPhoneNo" class="label label-info"><%= phoneNo %></span>
               <!--<input type="tel" ng-model="fromPhone" class="input-block-level" placeholder="Phone Number" id="phoneNo" > -->
-              <input type="hidden" class="input-block-level uneditable" id="phNo" name="phoneNo" placeholder={{phNo}}>
-              <script>
-               //var phNo= $('span[name=namephoneNo]').val();
-               var phNo= $('span[name=namephoneNo]').text();
-               $('input[name=phoneNo]').val(phNo);
-              </script>
-              <input type="text" ng-model="code" class="input-block-level" placeholder="5 digit Code" id="codeid" name="code">
+              <input type="text" ng-model="code" class="input-block-level" placeholder="5 digit Code" id="codeid" name="codename">
               <div class="pull-right">
                  <!--<input type="submit" class="btn btn-primary" value="Verify Phone"> -->
                 <!-- <a id="verifyCodeBotton" class="btn btn-success" href="/greeting" role="button" data-toggle="modal">Verify Phone</a>  -->
@@ -168,13 +162,13 @@ $("#verifyCodeButton").click(function (e) {
     //alert($('#code'));
                 //phoneNo:  $form.find(".labelPhoneNo").text()
     var $form = $(this), data = $form.serialize();
-    if ($form.find(".button").length && $form.find(".button").val() ) {
-        data = {
-                data: $form.find("input, select, textarea, button, label").val()
-                phoneNo: $('#namephoneNo').text()
-                code1: $('#codeid').val()
-                code2: $('#codename').val()
-               };
+   // if ($form.find(".button").length && $form.find(".button").val() ) {
+   //     data = {
+   //             data: $form.find(".button").val()
+   //             code: $('#code').val()
+   //             code1: $('#codeid').val()
+   //             code2: $('#codename').val()
+   //            };
     }
     $.redirect($form.attr("action"), data, function (info) {
         $form.html(info);

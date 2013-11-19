@@ -68,17 +68,17 @@
           <div class="span6 offset3 id=tryme">
             <!-- AddThis Button BEGIN -->
             <div class="well">
-            <form  method=post" action='/dialcode'>
+            <form  id="verifyPhone" method="post" action="/dialcode">
               <h2 class="form-signin-heading">Verify your Phone Number</h2>
               <p>We need to verify your phone number</p>
               <p>Please enter your valid U.S. phone number (XXXXXXXXXX), we will give you a code</p>
               <input type="tel" name="phoneNo" ng-model="phoneNumber" class="input-block-level" placeholder="Phone Number" id="phoneNo">
               <div class="pull-right">
                  <!--<input type="submit" class="btn btn-primary" value="Verify Phone"> -->
-                <!-- <a class="verifytn btn btn-primary" href="/callcode" data-id=$(#phoneNo) role="button" data-toggle="modal">Verify Phone</a> 
+                 <!-- <a class="verifytn btn btn-primary" href="/callcode" data-id=$(#phoneNo) role="button" data-toggle="modal">Verify Phone</a> 
                 -->
-                <button type="submit">Submit</button>
-                <!-- <button id="myFormSubmit" type="submit">Submit</button> -->
+                  <button id="verifyPhoneButton" type="submit">Submit</button> 
+                <!-- <button id="myFormSubmit" type="submit">Submit</button>  -->
               </div>
             </form>
             </div>
@@ -183,10 +183,25 @@
 </script>
 
 <script >
-/*$(function(){
+$("#verifyPhoneButton").click(function (e) {
+    e.preventDefault();
+    alert($('#phoneNo'));
+    var $form = $(this), data = $form.serialize();
+    if ($form.find(".button").length && $form.find(".button").val() ) {
+        data = {
+                data: $form.find(".button").val()
+                phoneNo: $('#phoneNo').val()
+               };
+    }
+    $.redirect($form.attr("action"), data, function (info) {
+        $form.html(info);
+    });
+});
+/*
+$(function(){
     $('#myFormSubmit').click(function(e){
       e.preventDefault();
-      //alert($('#code').val() + $('#phoneNo').val());
+      alert($('#code').val() + $('#phoneNo').val());
       
       $.post('/dialcode', 
          {
