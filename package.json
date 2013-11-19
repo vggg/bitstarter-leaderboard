@@ -13,6 +13,7 @@
     "express": "~3.3.4",
     "async": "~0.2.9",
     "request": "~2.27.0",
+    "twilio": "*",
     "underscore": "~1.5.1"
   },
   "engines": {
