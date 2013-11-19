@@ -128,12 +128,6 @@ var greetcodeurlfn = function(request, response){
   //var buffer = new Buffer(fs.readFileSync('dialcode.xml'),'utf-8');
   //response.send(buffer.toString());
   response.sendfile('greetcode.xml');
- // var message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n<Response>\n    <Say voice=\"Alice\">This message is from Vikram</Say> \n    <Say voice=\"Alice\">I love you... Have a great day</Say> \n    <Say voice=\"Alice\">Goodbye!..</Say> \n</Response>";
-  /*response.writeHead(200, {
-    "Content-Type": "text/xml"
-  });
-  response.end(message);
-*/
 };
 
 /*
