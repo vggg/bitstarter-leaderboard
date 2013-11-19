@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Say voice="alice">This message is from Greet Em Service</Say>
-    <Say voice="man">We are working on improving the service to use customized Greeting.</Say>
-    <Say voice="woman">Thank you for trying us out.</Say>
-    <Say voice="alice">We would love you feedback.</Say>
-    <Say voice="woman">Goodbye and have a great day!</Say>
+    <Say voice="man">We are working on improving the service to use customized Greeting</Say>
+    <Say voice="woman">Thank you for trying us out</Say>
+    <Say voice="alice">We would love you feedback</Say>
+    <Say voice="woman">Goodbye and have a great day</Say>
 </Response>
