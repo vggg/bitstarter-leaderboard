@@ -85,13 +85,18 @@ var dialcodeurlfn = function(request, response){
   //response.send(buffer.toString());
   response.sendfile('dialcode.xml');
 };
+/*
+var dialcodefn = function(request, response){
+    console.log(request.query.phoneNo);
+}; */
 
 var dialcodefn = function(request, response){
     console.log(request.query.phoneNo);
     //console.log(request.body.code);
     var t_url = "http://" + request.headers.host + "/dialcodeurl";
     console.log("iTwilio Url" + t_url);
-    TWILIO.callcode(request.query.phoneNo, t_url);
+    //TWILIO.callcode(request.query.phoneNo, t_url);
+    //response.send({ status: 'SUCCESS' });
     response.render("dialcode", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
@@ -102,9 +107,27 @@ var dialcodefn = function(request, response){
         coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
         phoneNo: request.body.phoneNo
-    })
+    });
 };
 
+var greetingfn = function(request, response){
+    console.log(request.query.phoneNo);
+    //console.log(request.body.code);
+   // var t_url = "http://" + request.headers.host + "/dialcodeurl";
+    //console.log("iTwilio Url" + t_url);
+    //TWILIO.callcode(request.query.phoneNo, t_url);
+    response.render("dialcode", {
+        name: Constants.APP_NAME,
+        title: "" + Constants.APP_NAME,
+        product_name: Constants.PRODUCT_NAME,
+        twitter_username: Constants.TWITTER_USERNAME,
+        twitter_tweet: Constants.TWITTER_TWEET,
+        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+        try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        phoneNo: request.body.phoneNo
+    });
+};
 
 var api_orderfn = function(request, response) {
     var successcb = function(totals) {
@@ -161,6 +184,7 @@ var ROUTES = define_routes({
     '/orders': orderfn,
     '/tryme': trymefn,
     '/dialcode': dialcodefn,
+    '/greeting': greetingfn,
     '/dialcodeurl': dialcodeurlfn,
     '/api/orders': api_orderfn,
     '/refresh_orders': refresh_orderfn

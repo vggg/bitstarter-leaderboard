@@ -61,22 +61,44 @@ var dialcodeurlfn = function(request, response){
 };
 
 var dialcodefn = function(request, response){
+    console.log("----- dialcodefn --------");
     console.log(request.body);
     //TWILIO.callcode('5109968313');
     //console.log(request.body);
-    response.send({ status: 'SUCCESS' });
-    //response.render("dialcode", {
-    //    name: Constants.APP_NAME,
-    //    title: "" + Constants.APP_NAME,
-    //    product_name: Constants.PRODUCT_NAME,
-    //    twitter_username: Constants.TWITTER_USERNAME,
-    //    twitter_tweet: Constants.TWITTER_TWEET,
-    //    product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
-    //    coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
-    //    try_me_data_code: Constants.TRY_ME_DATA_CODE,
-    //    phoneNo: request.body.phoneNo
-    //});
+    //response.send({ status: 'SUCCESS' });
+    response.render("dialcode", {
+        name: Constants.APP_NAME,
+        title: "" + Constants.APP_NAME,
+        product_name: Constants.PRODUCT_NAME,
+        twitter_username: Constants.TWITTER_USERNAME,
+        twitter_tweet: Constants.TWITTER_TWEET,
+        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+        try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        phoneNo: request.body.phoneNo
+    });
 };
+
+
+var greetingfn = function(request, response){
+    //TWILIO.callcode('5109968313');
+    console.log("-------greetingfn:------");
+    console.log(request.body);
+    //response.send({ status: 'SUCCESS' });
+    response.render("greeting", {
+        name: Constants.APP_NAME,
+        title: "" + Constants.APP_NAME,
+        product_name: Constants.PRODUCT_NAME,
+        twitter_username: Constants.TWITTER_USERNAME,
+        twitter_tweet: Constants.TWITTER_TWEET,
+        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+        try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        phoneNo: request.body.phoneNo
+    });
+};
+
+
 
 /*
    Helper functions which create a ROUTES array for export and use by web.js
@@ -106,6 +128,7 @@ var POST_ROUTES = define_routes({
     '/validatecode': validatecodefn,
     '/dialcode': dialcodefn,
     '/dialcodeurl': dialcodeurlfn,
+    '/greeting': greetingfn,
     '/callcode': callcodefn
 });
 
