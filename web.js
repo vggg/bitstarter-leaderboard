@@ -95,7 +95,7 @@ for(var ii in ROUTES) {
 }
 for(var ii in POST_ROUTES) {
     app.post(POST_ROUTES[ii].path, POST_ROUTES[ii].fn);
-    console.log(POST_ROUTES[ii].path + '  ' +  POST_ROUTES[ii].fn );
+    //console.log(POST_ROUTES[ii].path + '  ' +  POST_ROUTES[ii].fn );
 }
 /* app.post('/validatecode', function(request, response){
     //console.log(request.body);

@@ -66,7 +66,7 @@ var dialcodeurlfn = function(request, response){
 var dialcodefn = function(request, response){
     console.log("----- dialcodefn --------");
     console.log(request.body);
-     var t_url = "http://" + request.headers.host + "/dialcodeurl";
+    var t_url = "http://" + request.headers.host + "/dialcodeurl";
     TWILIO.callcode(request.body.phoneNo, t_url);
     //console.log(request.body);
     //response.send({ status: 'SUCCESS' });
@@ -79,16 +79,17 @@ var dialcodefn = function(request, response){
         product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
         coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        frameTitle: "Verify Code",
         phoneNo: request.body.phoneNo
     });
 };
 
 
 var greetingfn = function(request, response){
-    //TWILIO.callcode('5109968313');
     console.log("-------greetingfn:------");
     console.log(request.body);
     //response.send({ status: 'SUCCESS' });
+    if (request.body.code == "45012") {
     response.render("greeting", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
@@ -100,6 +101,23 @@ var greetingfn = function(request, response){
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
         phoneNo: request.body.phoneNo
     });
+    } else {
+    /*
+    response.render("tryme", {
+        name: Constants.APP_NAME,
+        title: "" + Constants.APP_NAME,
+        product_name: Constants.PRODUCT_NAME,
+        twitter_username: Constants.TWITTER_USERNAME,
+        twitter_tweet: Constants.TWITTER_TWEET,
+        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+        try_me_data_code: Constants.TRY_ME_DATA_CODE,
+        frameTitle: "Your Code Did Not Match",
+        phoneNo: request.body.phoneNo,
+    });
+    */
+    response.redirect("/tryme?failcode=true");
+    }
 };
 
 var greetemfn = function(request, response){
