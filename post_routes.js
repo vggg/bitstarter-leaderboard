@@ -59,7 +59,38 @@ var callcodefn = function(request, response){
 var dialcodeurlfn = function(request, response){
   //var buffer = new Buffer(fs.readFileSync('dialcode.xml'),'utf-8');
   //response.send(buffer.toString());
-  response.sendfile('dialcode.xml');
+    //console.log(request.body);
+    //console.log(request.query);
+    var ph_no = request.body.Called;
+    //var ph_no = /[0-9]{10}$/.exec(request.body.Called)[0];
+    //var ph_no = /[0-9]{10}$/.exec(request.body.Called);
+    var ph_no = /[0-9]{10}$/.exec(request.body.Called);
+    console.log("Called Header from Twilio Request" + request.body.Called);
+    var code_from_db = "x";
+    global.db.Codes.find({where: {phone_number: ph_no }}).success(function(record)
+    {
+        if (record) {
+           code_from_db = record.code_id;
+           console.log("got code from db " + code_from_db);
+   	   console.log("Phone from request Code from db? " + ph_no + " : " + code_from_db);
+            
+	   var data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say voice=\"Alice\">Your code is " + code_from_db + "</Say> <Say voice=\"Alice\">Let me Repeat that again for you</Say><Say voice=\"Alice\">Your code is " + code_from_db + " </Say><Say voice=\"Alice\">Goodbye.!</Say></Response>";
+           //var  buffer = new Buffer(data, 'utf8');
+           //var content_len =  Buffer.byteLength(data, 'utf8');
+           console.log(data);
+           //console.log(content_len);
+           var c_len = data.length;
+	   response.writeHead(200, { 'Content-Type': 'application/xml', 'Content-Length': c_len });
+	   response.write(data);
+	   response.end();
+	} else {
+           console.log("No record found for phone number");
+           response.send(404);
+        }
+        
+});
+
+  //response.sendfile('dialcode.xml');
 };
 
 
