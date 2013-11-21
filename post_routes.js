@@ -121,7 +121,7 @@ Project.find({ where: {title: 'aProject'} }).on('success', function(project) {
         coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
         frameTitle: "Verify Code",
-        phoneNo: request.body.phoneNo
+        phoneNo: request.body.phoneNo,
         codeid: code
     });
 };
