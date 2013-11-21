@@ -30,6 +30,7 @@ if (!global.hasOwnProperty('db')) {
         /* Local database
            We parse the .pgpass file for the connection string parameters.
         */
+        //console.log("Using localhost");
         var pgtokens = fs.readFileSync(PGPASS_FILE).toString().trimRight().split(':');
         var host = pgtokens[0];
         var port = pgtokens[1];
@@ -47,7 +48,8 @@ if (!global.hasOwnProperty('db')) {
     global.db = {
         Sequelize: Sequelize,
         sequelize: sq,
-        Order: sq.import(__dirname + '/order')
+        Order: sq.import(__dirname + '/order'),
+        Codes: sq.import(__dirname + '/code')
     };
 }
 module.exports = global.db;

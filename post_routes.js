@@ -67,7 +67,48 @@ var dialcodefn = function(request, response){
     console.log("----- dialcodefn --------");
     console.log(request.body);
     var t_url = "http://" + request.headers.host + "/dialcodeurl";
-    TWILIO.callcode(request.body.phoneNo, t_url);
+  
+ 
+
+    // Need to generate code based on phonenumber
+    // Generate Code based on phone number.
+    var code = Math.floor(Math.random()*100000).toString(); 
+    var expDate = new Date();
+    expDate = new Date(expDate.getTime() + 1000*30); 
+    // Add it to the codes database
+    global.db.Codes.sync().success(function(){ console.log("Codes db Sync");}).error(function(err) {console.log(err);});
+/*
+Project.find({ where: {title: 'aProject'} }).on('success', function(project) {
+  if (project) { // if the record exists in the db
+    project.updateAttributes({
+      title: 'a very different title now'
+    }).success(function() {});
+  }
+})
+*/
+   global.db.Codes.find({where: {phone_number: request.body.phoneNo }}).success(function(record){
+    // Update the code and exp date
+    if (record) {
+	record.updateAttributes( {
+	   code_id: code,
+           exp_time: expDate.toString()
+        }).success(function() {});
+    } else {
+
+        global.db.Codes.build({phone_number: request.body.phoneNo, code_id: code, exp_time: expDate.toString()}).save().success(function() {
+    	  console.log("write to Codes");	
+    	  console.log(request.body.phoneNo + " " + code + " " + expDate.toString());
+    	}).error(function (err) {
+     	  console.log("Error Codes.build");
+     	  //console.log(err);
+        });
+   
+    }
+    
+   });
+
+    //Comment the folln line during dev to stop making call to deliver code.
+    //TWILIO.callcode(request.body.phoneNo, t_url);
     //console.log(request.body);
     //response.send({ status: 'SUCCESS' });
     response.render("dialcode", {
@@ -88,8 +129,17 @@ var dialcodefn = function(request, response){
 var greetingfn = function(request, response){
     console.log("-------greetingfn:------");
     console.log(request.body);
-    //response.send({ status: 'SUCCESS' });
-    if (request.body.code == "45012") {
+    // Get Code from db and verify it
+    var code_from_db = "x";
+    global.db.Codes.find({where: {phone_number: request.body.phoneNo }}).success(function(record) 
+    {
+        if (record) {
+           code_from_db = record.code_id;
+           console.log("got code from db " + code_from_db);
+
+
+   console.log("Code from request == Code from db? " + request.body.code + " == " + code_from_db);
+    if (request.body.code.toString() == code_from_db) {
     response.render("greeting", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
@@ -101,9 +151,20 @@ var greetingfn = function(request, response){
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
         phoneNo: request.body.phoneNo
     });
-    } else {
-    /*
-    response.render("tryme", {
+    } else { response.redirect("/tryme?failcode=true"); }  
+
+        }
+        else {
+           console.log("find record failed");
+          
+        }
+        //console.log(record)
+    });
+/*
+    //response.send({ status: 'SUCCESS' });
+   console.log("Code from request == Code from db? " + request.body.code + " == " + code_from_db);
+    if (request.body.code.toString() == code_from_db) {
+    response.render("greeting", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
         product_name: Constants.PRODUCT_NAME,
@@ -112,12 +173,10 @@ var greetingfn = function(request, response){
         product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
         coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
         try_me_data_code: Constants.TRY_ME_DATA_CODE,
-        frameTitle: "Your Code Did Not Match",
-        phoneNo: request.body.phoneNo,
+        phoneNo: request.body.phoneNo
     });
-    */
-    response.redirect("/tryme?failcode=true");
-    }
+    } else { response.redirect("/tryme?failcode=true"); }
+*/
 };
 
 var greetemfn = function(request, response){
@@ -128,7 +187,8 @@ var greetemfn = function(request, response){
     console.log(request.body.greettext);
      var t_url = "http://" + request.headers.host + "/greetcodeurl";
     console.log("Twilio Url" + t_url);
-    TWILIO.callcode(request.body.toPhoneNo, t_url);
+    //Comment off the following line in dev env to stop making calls
+    //TWILIO.callcode(request.body.toPhoneNo, t_url);
     response.render("greetem", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
