@@ -68,30 +68,11 @@
           <div class="span6 offset3 id=tryme">
             <!-- AddThis Button BEGIN -->
             <div class="well">
-            <form id="greetem"  method="post" action="/greetem">
-              <h2 class="form-signin-heading">Let's Greet Em!</h2>
-              <p>Tell us how you want us to say as your greeting</p>
-              <span for="greettext" id="spanPhNo" ng-model="phNo" name="namephoneNo" class="label label-info"><%= phoneNo %></span>
-              <!--<input type="tel" ng-model="fromPhone" class="input-block-level" placeholder="Phone Number" id="phoneNo" > -->
-              <input type="hidden" class="input-block-level uneditable" id="phNo" name="phoneNo" placeholder={{phNo}}>
-              <input type="tel" class="input-block-level" id="tophNo" name="toPhoneNo" placeholder="Phone Number of the person you want to Greet" name="toPhoneNo">
-              <script>
-               //var phNo= $('span[name=namephoneNo]').val();
-               var phNo= $('span[name=namephoneNo]').text();
-               $('input[name=phoneNo]').val(phNo);
-              </script>
-              <input type="text" ng-model="greettext" class="input-block-level" placeholder="Type something like 'Wish you a very Happy Birthday'" id="greettext" name="greettext">
-              <div class="pull-right">
-                 <!--<input type="submit" class="btn btn-primary" value="Verify Phone"> -->
-                <!-- <a id="verifyCodeBotton" class="btn btn-success" href="/greeting" role="button" data-toggle="modal">Verify Phone</a>  -->
-                <button id="verifyCodeButton" type="submit">Greet Em</button>
-              </div>
+            <form  id="contactus" method="post" action="/">
+              <h2 class="form-signin-heading"><%= frameTitle %></h2>
+              <p>Contact us at greetem@shalkiengineers.com</p>
             </form>
             </div>
-
-
-
-
 
             <!-- AddThis Button END -->
           </div>
@@ -151,6 +132,32 @@
       </div>
     </div>
 
+
+<!--
+   <div id="validatecode" class="modal hide fade" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <h2 class="form-signin-heading">Verify Code</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i></button>
+        <h3 id ="modalLabel">Verify Phone</h3>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="/validatecode">
+        <div class="controls controls-row">
+        <p>Please enter the 5 digit code</p>
+        <input type="text" class="input-block-level" placeholder="Code" name="code" id="code">
+        <button id="myModalSubmit" type="submit">Submit</button>
+        </div>
+      </form>
+   </div>
+   <div class="modal-footer">
+     <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">cancel</button>
+   </div>
+  </div>
+
+-->
+
+
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -163,25 +170,64 @@
 </script>
 
 <script >
-$("#verifyCodeButton").click(function (e) {
+$("#verifyPhoneButton").click(function (e) {
     e.preventDefault();
-    //alert($('#phoneNo'));
-    //alert($('#code'));
-                //phoneNo:  $form.find(".labelPhoneNo").text()
+    alert($('#phoneNo'));
     var $form = $(this), data = $form.serialize();
     if ($form.find(".button").length && $form.find(".button").val() ) {
         data = {
-                data: $form.find("input, select, textarea, button, label").val()
-                phoneNo: $('#namephoneNo').text()
-                code1: $('#codeid').val()
-                code2: $('#codename').val()
+                data: $form.find(".button").val()
+                phoneNo: $('#phoneNo').val()
                };
     }
     $.redirect($form.attr("action"), data, function (info) {
         $form.html(info);
     });
 });
-
+/*
+$(function(){
+    $('#myFormSubmit').click(function(e){
+      e.preventDefault();
+      alert($('#code').val() + $('#phoneNo').val());
+      
+      $.post('/dialcode', 
+         {
+            phoneNo:$('#phoneNo').val()
+         },
+         function(data, status, xhr){
+           //do something here with response;
+           //assume no error
+           //console.log(data);
+           //console.log(status);
+           //$('#validatecode').modal('show');
+            
+         }
+      );
+      
+    });
+});
+*/
+/*
+$(function(){
+    $('#myModalSubmit').click(function(e){
+      e.preventDefault();
+      //alert($('#code').val() + $('#phoneNo').val());
+      
+      $.post('/validatecode', 
+         {
+            phoneNo:$('#phoneNo').val()
+            code:$('#code').val()
+         },
+         function(data, status, xhr){
+           //do something here with response;
+           //assume no error
+            
+         }
+      );
+      
+    });
+});
+*/
 </script>
   </body>
 </html>
