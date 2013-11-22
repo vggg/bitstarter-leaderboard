@@ -32,6 +32,8 @@ var Constants = {
   TWITTER_TWEET: "This student's twilio crowdfunder looks interesting.",
   COINBASE_PREORDER_DATA_CODE: "13b56883764b54e6ab56fef3bcc7229c",
   TRY_ME_DATA_CODE: "12345",
+  greetemail: "greetem@shalkiengineers.com",
+  greetemailtext: "greetem at shalkiengineers dot com",
   days_left: function() {
       return Math.max(Math.ceil((this.FUNDING_END_DATE - new Date()) / (1000*60*60*24)), 0);
   }

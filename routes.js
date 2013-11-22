@@ -57,6 +57,8 @@ var contactfn = function(request, response) {
     var frameTitleStr = "About/Contact";
     response.render("contact", {
         name: Constants.APP_NAME,
+        greetemail: Constants.greetemail,
+        greetemailtext: Constants.greetemailtext,
         title: "" + Constants.APP_NAME,
         product_name: Constants.PRODUCT_NAME,
         twitter_username: Constants.TWITTER_USERNAME,
