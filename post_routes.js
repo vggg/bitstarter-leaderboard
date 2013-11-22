@@ -227,7 +227,7 @@ var greetemfn = function(request, response){
         }).success(function() {});
     } else {
 
-        global.db.Codes.build({from_phone: request.body.phoneNo, to_phone: request.body.toPhoneNo, greeting: request.body.greettext, greet_time: greetDate.toString() }).save().success(function() {
+        global.db.Greetings.build({from_phone: request.body.phoneNo, to_phone: request.body.toPhoneNo, greeting: request.body.greettext, greet_time: greetDate.toString() }).save().success(function() {
           console.log("write to Greetingdb");
           console.log(request.body.phoneNo + " " + request.body.toPhone + " " + request.body.greettext + " " + expDate.toString());
         }).error(function (err) {
