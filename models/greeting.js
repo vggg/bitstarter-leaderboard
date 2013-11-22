@@ -14,25 +14,26 @@ var util = require('util');
 var uu = require('underscore');
 
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define("Codes", {
-	phone_number: {type: DataTypes.STRING, unique: true, allowNull: false},
-	code_id: {type: DataTypes.STRING},
-	exp_time: {type: DataTypes.STRING, allowNull: false}
+    return sequelize.define("Greetings", {
+	from_phone: {type: DataTypes.STRING, unique: false, allowNull: false},
+	to_phone: {type: DataTypes.STRING, unique: false, allowNull: false},
+	greeting: {type: DataTypes.STRING},
+	greet_time: {type: DataTypes.STRING, allowNull: false}
     }, {
         timestamps: false,
 	classMethods: {
-	    numCodes: function() {
+	    numGreetings: function() {
 		this.count().success(function(c) {
-		    console.log("There are %s Codes", c);});
+		    console.log("There are %s Greetings", c);});
 	    },
 	    allToJSON: function(successcb, errcb) {
 		this.findAll()
-		    .success(function(codes) {
-			successcb(uu.invoke(codes, 'toJSON'));
+		    .success(function(greetings) {
+			successcb(uu.invoke(greetings, 'toJSON'));
 		    })
 		    .error(errcb);
 	    },
-	    addAllFromJSON: function(codes, errcb) {
+	    addAllFromJSON: function(greetings, errcb) {
 		/*
 		  This method is implemented naively and can be slow if
 		  you have many orders.
@@ -59,11 +60,11 @@ module.exports = function(sequelize, DataTypes) {
 		  hanging.
 		*/
 		var MAX_CONCURRENT_POSTGRES_QUERIES = 1;
-		async.eachLimit(codes,
+		async.eachLimit(greetings,
 				MAX_CONCURRENT_POSTGRES_QUERIES,
 				this.addFromJSON.bind(this), errcb);
 	    },
-	    addFromJSON: function(code_obj, cb) {
+	    addFromJSON: function(greet_obj, cb) {
 		/*
 		  Add from JSON only if order has not already been added to
 		  our database.
@@ -79,13 +80,13 @@ module.exports = function(sequelize, DataTypes) {
 		  do something where we accessed the class to which an instance
 		  belongs, but this method is a bit more clear.
 		*/
-		var code = code_obj.code; // code json from phone_number
-		if (code.phone_number == "completed") {
+		var greet = greet_obj.greet; // code json from phone_number
+		if (greet.phone_number == "completed") {
 		    cb();
 		} else {
-		    var _Code = this;
-		    _Code.find({where: {phone_number: code.phone_number}}).success(function(code_instance) {
-			if (code_instance) {
+		    var _Greet = this;
+		    _Greet.find({where: {from_phone: greet.from_phone, to_phone: greet.to_phone, greeting: greet.greeting}}).success(function(greet_instance) {
+			if (greet_instance) {
 			    // order already exists, do nothing
 			    cb();
 			} else {
@@ -101,12 +102,13 @@ module.exports = function(sequelize, DataTypes) {
 			       corresponding to 1e-8 BTC, aka 'Bitcents') to
 			       BTC.
 			    */
-			    var new_code_instance = _Code.build({
-				phone_number: code.phone_number,
-				code_id: code.code_id,
-				exp_time: code.exp_time
+			    var new_greet_instance = _Greet.build({
+				from_phone: greet.from_phone,
+				to_phone: greet.to_phone,
+				greeting: greet.greeting,
+				greet_time: code.greet_time
 			    });
-			    new_order_instance.save().success(function() {
+			    new_greet_instance.save().success(function() {
 				cb();
 			    }).error(function(err) {
 				cb(err);
@@ -119,9 +121,9 @@ module.exports = function(sequelize, DataTypes) {
 	instanceMethods: {
 	    repr: function() {
 		return util.format(
-		    "Codes <ID: %s Phone_Number :%s Code:%s Expiration Time:%s " 
-			, this.id, this.phone_number,
-		    this.code_id, this.exp_time);
+		    "Greetings <ID: %s From_Number :%s To_Number :%s Greeting:%s Greeting Time:%s " 
+			, this.id, this.from_phone, this.to_number,
+		    this.greeting, this.greet_time);
 	    },
 	    hasExpired: function() {
 		/*
@@ -130,7 +132,7 @@ module.exports = function(sequelize, DataTypes) {
 		  For a real app we'd want to periodically pull down and cache
 		  the value from http://blockchain.info/ticker.
 		*/
-		return this.exp_time <= new Date();
+		return this.greet_time <= new Date();
 	    }
 	}
     });

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say voice="alice">You have reached the Greet Em Service</Say>
+    <Say voice="man">We are working on improving out service offerings</Say>
+    <Say voice="woman">Please try us out today</Say>
+    <Say voice="man">Please visit greetem.shalkiengineers.com</Say>
+    <Say voice="man">greet em dot shalki engineers dot com</Say>
+    <Say voice="alice">We would love you feedback</Say>
+    <Say voice="man">Thank you </Say>
+    <Say voice="woman">Goodbye and have a great day</Say>
+</Response>

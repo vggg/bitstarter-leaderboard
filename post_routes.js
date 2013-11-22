@@ -139,7 +139,7 @@ Project.find({ where: {title: 'aProject'} }).on('success', function(project) {
    });
 
     //Comment the folln line during dev to stop making call to deliver code.
-    TWILIO.callcode(request.body.phoneNo, t_url);
+    //TWILIO.callcode(request.body.phoneNo, t_url);
     //console.log(request.body);
     //response.send({ status: 'SUCCESS' });
     response.render("dialcode", {
@@ -213,14 +213,37 @@ var greetingfn = function(request, response){
 
 var greetemfn = function(request, response){
     console.log("-------greetemfn:------");
-    console.log(request.body);
+    //console.log(request.body);
     console.log(request.body.phoneNo);
     console.log(request.body.toPhoneNo);
     console.log(request.body.greettext);
+    // Check db if the user has same greeting
+    var greetDate = new Date();
+   global.db.Greetings.find({where: {from_phone: request.body.phoneNo, to_phone: request.body.toPhoneNo, greeting: request.body.greettext }}).success(function(record){
+    // Update the code and exp date
+    if (record) {
+        record.updateAttributes( {
+           greet_time: greetDate.toString()
+        }).success(function() {});
+    } else {
+
+        global.db.Codes.build({from_phone: request.body.phoneNo, to_phone: request.body.toPhoneNo, greeting: request.body.greettext, greet_time: greetDate.toString() }).save().success(function() {
+          console.log("write to Greetingdb");
+          console.log(request.body.phoneNo + " " + request.body.toPhone + " " + request.body.greettext + " " + expDate.toString());
+        }).error(function (err) {
+          console.log("Error Greeting db build operation");
+          //console.log(err);
+        });
+
+    }
+
+   });
+
+
      var t_url = "http://" + request.headers.host + "/greetcodeurl";
     console.log("Twilio Url" + t_url);
     //Comment off the following line in dev env to stop making calls
-    TWILIO.callcode(request.body.toPhoneNo, t_url);
+    //TWILIO.callcode(request.body.toPhoneNo, t_url);
     response.render("greetem", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
@@ -238,6 +261,11 @@ var greetcodeurlfn = function(request, response){
   //var buffer = new Buffer(fs.readFileSync('dialcode.xml'),'utf-8');
   //response.send(buffer.toString());
   response.sendfile('greetcode.xml');
+};
+var incomingcallurlfn = function(request, response){
+  //var buffer = new Buffer(fs.readFileSync('dialcode.xml'),'utf-8');
+  //response.send(buffer.toString());
+  response.sendfile('incomingcall.xml');
 };
 
 /*
@@ -271,6 +299,7 @@ var POST_ROUTES = define_routes({
     '/greeting': greetingfn,
     '/greetem': greetemfn,
     '/callcode': callcodefn,
+    '/incoming': incomingcallurlfn,
     '/greetcodeurl': greetcodeurlfn
 });
 
