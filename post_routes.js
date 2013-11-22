@@ -139,7 +139,7 @@ Project.find({ where: {title: 'aProject'} }).on('success', function(project) {
    });
 
     //Comment the folln line during dev to stop making call to deliver code.
-    //TWILIO.callcode(request.body.phoneNo, t_url);
+    TWILIO.callcode(request.body.phoneNo, t_url);
     //console.log(request.body);
     //response.send({ status: 'SUCCESS' });
     response.render("dialcode", {
@@ -243,7 +243,7 @@ var greetemfn = function(request, response){
      var t_url = "http://" + request.headers.host + "/greetcodeurl";
     console.log("Twilio Url" + t_url);
     //Comment off the following line in dev env to stop making calls
-    //TWILIO.callcode(request.body.toPhoneNo, t_url);
+    TWILIO.callcode(request.body.toPhoneNo, t_url);
     response.render("greetem", {
         name: Constants.APP_NAME,
         title: "" + Constants.APP_NAME,
