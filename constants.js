@@ -29,7 +29,7 @@ var Constants = {
   PRODUCT_NAME: "Greet Em...!!!: Development Version",
   PRODUCT_SHORT_DESCRIPTION: "Never forget to call your loved ones and greet them...!!!",
   TWITTER_USERNAME: "GreatEmm",
-  TWITTER_TWEET: "This student's twilio crowdfunder looks interesting.",
+  TWITTER_TWEET: "This twilio crowdfunder looks interesting.",
   COINBASE_PREORDER_DATA_CODE: "13b56883764b54e6ab56fef3bcc7229c",
   TRY_ME_DATA_CODE: "12345",
   greetemail: "greetem@shalkiengineers.com",
