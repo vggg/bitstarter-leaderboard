@@ -14,26 +14,30 @@ var util = require('util');
 var uu = require('underscore');
 
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define("Greetings", {
-	from_phone: {type: DataTypes.STRING, unique: false, allowNull: false},
-	to_phone: {type: DataTypes.STRING, unique: false, allowNull: false},
-	greeting: {type: DataTypes.STRING},
-	greet_time: {type: DataTypes.STRING, allowNull: false}
+    return sequelize.define("Users", {
+	firstname: {type: DataTypes.STRING, unique: false, allowNull: false},
+	lastname: {type: DataTypes.STRING, unique: false, allowNull: false},
+	email: {type: DataTypes.STRING, unique: true,allowNull: false},
+	phonenumber: {type: DataTypes.STRING, unique: true,allowNull: false},
+	pin: {type: DataTypes.STRING, unique: false,allowNull: false},
+	email_verified: {type: DataTypes.BOOLEAN, unique: false,allowNull: false},
+	pin_verified: {type: DataTypes.BOOLEAN, unique: false,allowNull: false},
+	password: {type: DataTypes.STRING, allowNull: false}
     }, {
         timestamps: false,
 	classMethods: {
-	    numGreetings: function() {
+	    numUsers: function() {
 		this.count().success(function(c) {
-		    console.log("There are %s Greetings", c);});
+		    console.log("There are %s Users", c);});
 	    },
 	    allToJSON: function(successcb, errcb) {
 		this.findAll()
-		    .success(function(greetings) {
-			successcb(uu.invoke(greetings, 'toJSON'));
+		    .success(function(users) {
+			successcb(uu.invoke(users, 'toJSON'));
 		    })
 		    .error(errcb);
 	    },
-	    addAllFromJSON: function(greetings, errcb) {
+	    addAllFromJSON: function(users, errcb) {
 		/*
 		  This method is implemented naively and can be slow if
 		  you have many orders.
@@ -60,11 +64,11 @@ module.exports = function(sequelize, DataTypes) {
 		  hanging.
 		*/
 		var MAX_CONCURRENT_POSTGRES_QUERIES = 1;
-		async.eachLimit(greetings,
+		async.eachLimit(users,
 				MAX_CONCURRENT_POSTGRES_QUERIES,
 				this.addFromJSON.bind(this), errcb);
 	    },
-	    addFromJSON: function(greet_obj, cb) {
+	    addFromJSON: function(user_obj, cb) {
 		/*
 		  Add from JSON only if order has not already been added to
 		  our database.
@@ -80,13 +84,13 @@ module.exports = function(sequelize, DataTypes) {
 		  do something where we accessed the class to which an instance
 		  belongs, but this method is a bit more clear.
 		*/
-		var greet = greet_obj.greet; // code json from phone_number
-		if (greet.phone_number == "completed") {
+		var user = user_obj.user; // code json from phone_number
+		if (user.phonenumber == "completed") {
 		    cb();
 		} else {
-		    var _Greet = this;
-		    _Greet.find({where: {from_phone: greet.from_phone, to_phone: greet.to_phone, greeting: greet.greeting}}).success(function(greet_instance) {
-			if (greet_instance) {
+		    var _User = this;
+		    _User.find({where: {phonenumber: user.phonenumber, email: user.email}}).success(function(user_instance) {
+			if (user_instance) {
 			    // order already exists, do nothing
 			    cb();
 			} else {
@@ -102,11 +106,15 @@ module.exports = function(sequelize, DataTypes) {
 			       corresponding to 1e-8 BTC, aka 'Bitcents') to
 			       BTC.
 			    */
-			    var new_greet_instance = _Greet.build({
-				from_phone: greet.from_phone,
-				to_phone: greet.to_phone,
-				greeting: greet.greeting,
-				greet_time: greet.greet_time
+			    var new_user_instance = _User.build({
+				firstname: user.firstname,
+				lastname: user.lastname,
+				phonenumber: user.phonenumber,
+				email: user.email,
+				pin: user.pin,
+				email_verified: "false",
+				pin_verified: "false",
+				password: user.password
 			    });
 			    new_greet_instance.save().success(function() {
 				cb();
@@ -121,18 +129,15 @@ module.exports = function(sequelize, DataTypes) {
 	instanceMethods: {
 	    repr: function() {
 		return util.format(
-		    "Greetings <ID: %s From_Number :%s To_Number :%s Greeting:%s Greeting Time:%s " 
-			, this.id, this.from_phone, this.to_number,
-		    this.greeting, this.greet_time);
+		    "Users <ID: %s First Name :%s Last Name :%s Email :%s  Password: %s Phone Number :%s Pin: %s Email Verified :%s Pin Verified : %s" 
+			, this.id, this.firstname, this.lastname,
+		    this.email, this.password, this.phonenumber, this.pin, this.email_verified, this.pin_verified);
 	    },
-	    hasExpired: function() {
-		/*
-		  Illustrative only.
-
-		  For a real app we'd want to periodically pull down and cache
-		  the value from http://blockchain.info/ticker.
-		*/
-		return this.greet_time <= new Date();
+	    pinVerified: function() {
+		return this.pin_verified;
+	    },
+	    emailVerified: function() {
+		return this.email_verified;
 	    }
 	}
     });

@@ -192,24 +192,61 @@ var greetingfn = function(request, response){
         }
         //console.log(record)
     });
-/*
-    //response.send({ status: 'SUCCESS' });
-   console.log("Code from request == Code from db? " + request.body.code + " == " + code_from_db);
-    if (request.body.code.toString() == code_from_db) {
-    response.render("greeting", {
-        name: Constants.APP_NAME,
-        title: "" + Constants.APP_NAME,
-        product_name: Constants.PRODUCT_NAME,
-        twitter_username: Constants.TWITTER_USERNAME,
-        twitter_tweet: Constants.TWITTER_TWEET,
-        product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
-        coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
-        try_me_data_code: Constants.TRY_ME_DATA_CODE,
-        phoneNo: request.body.phoneNo
-    });
-    } else { response.redirect("/tryme?failcode=true"); }
-*/
 };
+
+var signupfn = function(request, response){
+    console.log("-------signupfn:------");
+    console.log(request.body);
+    // Get Code from db and verify it
+    var code_from_db = "x";
+    global.db.Users.find({where: {phonenumber: request.body.phonenumber, email: request.body.email }}).success(function(record)
+    {
+        if (record) {
+           phone_from_db = record.phonenumber;
+           email_from_db = record.email;
+           console.log("got phone from db " + phone_from_db);
+           console.log("got email from db " + email_from_db);
+           response.render("signup", {
+                name: Constants.APP_NAME,
+                title: "" + Constants.APP_NAME,
+                product_name: Constants.PRODUCT_NAME,
+                twitter_username: Constants.TWITTER_USERNAME,
+                twitter_tweet: Constants.TWITTER_TWEET,
+                product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
+                coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
+                frameTitle: "Your Phone Number or email exists, Please try again",
+                phoneNumber: "10 digit Phone Number", 
+                firstName: "First Name", 
+                lastName: "Last Name",  
+                emailId: "Enter Your Email ID" 
+           });
+        }
+        else {
+           // Add user into db
+           global.db.Users.build({
+                firstname: request.body.fname, 
+                lastname: request.body.lname, 
+                email: request.body.email, 
+                email_verified: "False", 
+                password: request.body.password, 
+                pin: request.body.pin, 
+                pin_verified: "False", 
+                phonenumber: request.body.phonenumber 
+           }).save().success(function() {
+          console.log("Adding a user");
+          console.log(request.body.phonenumber + " " + request.body.email + " " + request.body.fname + " " + request.body.lname);
+        }).error(function (err) {
+          console.log("Error Greeting db build operation");
+          //console.log(err);
+        });
+
+        }
+        //console.log(record)
+    });
+};
+
+
+
 
 var greetemfn = function(request, response){
     console.log("-------greetemfn:------");
@@ -298,6 +335,7 @@ var POST_ROUTES = define_routes({
     '/dialcodeurl': dialcodeurlfn,
     '/greeting': greetingfn,
     '/greetem': greetemfn,
+    '/signup': signupfn,
     '/callcode': callcodefn,
     '/incoming': incomingcallurlfn,
     '/greetcodeurl': greetcodeurlfn

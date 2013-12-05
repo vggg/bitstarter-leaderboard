@@ -81,6 +81,10 @@ var signupfn = function(request, response) {
         product_short_description: Constants.PRODUCT_SHORT_DESCRIPTION,
         coinbase_preorder_data_code: Constants.COINBASE_PREORDER_DATA_CODE,
         frameTitle: frameTitleStr,
+        phoneNumber: "10 digit Phone Number",
+        firstName: "First Name",
+        lastName: "Last Name",
+        emailId: "Enter Your Email ID"
     });
 };
 

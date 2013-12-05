@@ -67,19 +67,26 @@
 <!-- Delete from here -->
 
       <div class="row-fluid">
-          <div class="span6 offset3 id="signup">
+          <div class="span7 offset3 id="signup">
             <!-- AddThis Button BEGIN -->
             <div class="well">
-            <form  id="signup-form" method="post" action="#signup">
+            <form  id="signup-form" >
+            <!--<form  id="signup-form" method="post" action="#signup">-->
               <h2 class="form-signin-heading"><%= frameTitle %></h2>
-              <label class="control-label" for="fname">First Name</label>
-              <input type="text" name="fname" ng-model="fname" class="input-xlarge" placeholder="First Name" id="fname">
-              <label class="control-label" for="lname">Last Name</label>
-              <input type="text" name="lname" ng-model="lname" class="input-xlarge" placeholder="Last Name" id="lname">
+                <label class="control-label" for="fname">First Name</label>
+                <input type="text" name="fname" ng-model="fname" class="input-xlarge" placeholder="<%= firstName %>" id="fname">
+                <label class="control-label" for="lname">Last Name</label>
+                <input type="text" name="lname" ng-model="lname" class="input-xlarge" placeholder="<%=lastName %>" id="lname">
               <label class="control-label" for="email">Email Address</label>
               <input type="text" name="email" ng-model="email" class="input-xlarge" placeholder="Enter your email address" id="email">
+              <label class="control-label" for="passwd">Password</label>
+              <input type="password" name="passwd" ng-model="passwd" class="input-xlarge" placeholder="Password" id="passwd">
+              <label class="control-label" for="cpasswd">Confirm Password</label>
+              <input type="password" name="cpasswd" ng-model="cpasswd" class="input-xlarge" placeholder="Re-Type your Password" id="cpasswd">
               <label class="control-label" for="phoneNo">Phone Number</label>
               <input type="tel" name="phoneNo" ng-model="phoneNumber" class="input-xlarge" placeholder="Phone Number" id="phoneNo">
+              <label class="control-label" for="phPin">4 digit PIN</label>
+              <input type="tel" name="phPin" class="input-xlarge" placeholder="4 Digit PIN" id="phPin">
               <p> </P>
               <div class="pull-right">
                  <!--<input type="submit" class="btn btn-primary" value="Verify Phone"> -->
@@ -207,8 +214,23 @@ $(document).ready(function () {
                 required: true,
                 email: true
             },
+            passwd: {
+                required: true,
+                minlength: 6
+            },
+            cpasswd: {
+                equalTo: "#passwd"
+            },
             phoneNo: {
                 minlength: 10,
+                maxlength: 10,
+                digits: true,
+                required: true
+            },
+            phPin: {
+                minlength: 4,
+                maxlength: 4,
+                digits: true,
                 required: true
             }
         },
@@ -238,15 +260,19 @@ $("#verifyPhoneButton").click(function (e) {
     });
 });
 */
-/*
+
 $(function(){
-    $('#myFormSubmit').click(function(e){
+    $('#signupButton').click(function(e){
       e.preventDefault();
-      alert($('#code').val() + $('#phoneNo').val());
       
-      $.post('/dialcode', 
+      $.post('/signup', 
          {
-            phoneNo:$('#phoneNo').val()
+            fname:$('#fname').val(),
+            lname:$('#lname').val(),
+            email:$('#email').val(),
+            password:$('#passwd').val(),
+            phonenumber:$('#phoneNo').val(),
+            pin:$('#phPin').val()
          },
          function(data, status, xhr){
            //do something here with response;
@@ -260,7 +286,7 @@ $(function(){
       
     });
 });
-*/
+
 /*
 $(function(){
     $('#myModalSubmit').click(function(e){
@@ -272,9 +298,10 @@ $(function(){
             phoneNo:$('#phoneNo').val()
             code:$('#code').val()
          },
-         function(data, status, xhr){
+         function(info){
            //do something here with response;
            //assume no error
+           $form.html(info);
             
          }
       );

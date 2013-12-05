@@ -50,7 +50,8 @@ if (!global.hasOwnProperty('db')) {
         sequelize: sq,
         Order: sq.import(__dirname + '/order'),
         Codes: sq.import(__dirname + '/code'),
-        Greetings: sq.import(__dirname + '/greeting')
+        Greetings: sq.import(__dirname + '/greeting'),
+        Users: sq.import(__dirname + '/user')
     };
 }
 module.exports = global.db;
